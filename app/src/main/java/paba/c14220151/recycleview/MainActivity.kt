@@ -2,6 +2,7 @@ package paba.c14220151.recycleview
 
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -31,7 +32,18 @@ class MainActivity : AppCompatActivity() {
             _gambar = resources.getStringArray(R.array.gambarWayang).toMutableList()
         }
 
+        sp = getSharedPreferences("dataSP", MODE_PRIVATE) //dataSP sbg contoh untuk nama DB
+
+        val gson = Gson()
+        val isiSP = sp.getString("spWayang", null)
+        val type = object : TypeToken<ArrayList<wayang>>() {}.type
+        if (isiSP != null) {
+            arWayang = gson.fromJson(isiSP, type)
+        }
+
         fun TambahData() {
+            val gson = Gson()
+            val editor = sp.edit()
             arWayang.clear()
             for (position in _nama.indices) {
                 val data = wayang(
@@ -42,6 +54,9 @@ class MainActivity : AppCompatActivity() {
                 )
                 arWayang.add(data)
             }
+            val json = gson.toJson(arWayang)
+            editor.putString("spWayang", json)
+            editor.apply()
         }
 
         fun TampilkanData() {
@@ -99,6 +114,8 @@ class MainActivity : AppCompatActivity() {
         SiapkanData()
         TambahData()
         TampilkanData()
+
+
     }
 
 
@@ -106,10 +123,16 @@ class MainActivity : AppCompatActivity() {
     //    private lateinit var _karakter : Array<String>
     //    private lateinit var _deskripsi : Array<String>
     //    private lateinit var _gambar : Array<String>
-    private lateinit var _nama: MutableList<String>
-    private lateinit var _karakter: MutableList<String>
-    private lateinit var _deskripsi: MutableList<String>
-    private lateinit var _gambar: MutableList<String>
+//    private lateinit var _nama: MutableList<String>
+//    private lateinit var _karakter: MutableList<String>
+//    private lateinit var _deskripsi: MutableList<String>
+//    private lateinit var _gambar: MutableList<String>
+
+    private var _nama: MutableList<String> = emptyList<String>().toMutableList()
+    private  var _karakter: MutableList<String> = emptyList<String>().toMutableList()
+    private var _deskripsi: MutableList<String> = emptyList<String>().toMutableList()
+    private var _gambar: MutableList<String> = emptyList<String>().toMutableList()
+    private lateinit var sp: SharedPreferences
 
     //    private var arWayang = arrayListOf<wayang>()
     private var arWayang = mutableListOf<wayang>()
