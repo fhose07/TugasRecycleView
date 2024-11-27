@@ -12,6 +12,9 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,6 +60,18 @@ class MainActivity : AppCompatActivity() {
             val json = gson.toJson(arWayang)
             editor.putString("spWayang", json)
             editor.apply()
+        }
+
+        if (arWayang.size==0){
+            SiapkanData()
+        } else{
+            arWayang.forEach {
+                _nama.add(it.nama)
+                _gambar.add(it.foto)
+                _deskripsi.add(it.deskripsi)
+                _karakter.add(it.karakter)
+            }
+            arWayang.clear()
         }
 
         fun TampilkanData() {
